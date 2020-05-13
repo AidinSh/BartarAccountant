@@ -1,5 +1,6 @@
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -7,13 +8,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.text.StyledEditorKit;
+
 
 public class Modals {
-    int width = 300 , height = 300;
+    int width = 350 , height = 300;
+    Employee employee;
 
     public void getNewEmployee(){
 
@@ -39,29 +44,42 @@ public class Modals {
         salaryField.setPromptText("مبلغ به تومان");
         GridPane.setConstraints(salaryField,1, 1);
 
-        Label maritalStatusLabel = new Label("وضعیت تعهل :");
+        Label maritalStatusLabel = new Label("وضعیت تاهل :");
         GridPane.setConstraints(maritalStatusLabel, 0, 2);
 
         ChoiceBox<String> maritalStatusBox = new ChoiceBox<>();
         maritalStatusBox.getItems().addAll("مجرد", "متاهل");
+        maritalStatusBox.setValue("مجرد");
         GridPane.setConstraints(maritalStatusBox, 1, 2);
 
         Button btnSubmit = new Button("ثبت");
         GridPane.setConstraints(btnSubmit, 0, 3);
         btnSubmit.setOnAction(e -> {
-            Employee employee = new Employee(nameField.getText(), (Double.parseDouble(salaryField.getText())));
+            if (nameField.getText().isEmpty())
+                new AlertMessage().errorHandlingMessage("لطفا نام را وارد کنید");
+            else if (salaryField.getText().isEmpty())
+                new AlertMessage().errorHandlingMessage("لطفا میزان حقوق را وارد کنید");
+            else {
+                employee = new Employee(nameField.getText(), (Double.parseDouble(salaryField.getText())));
+                employee.setMarried(maritalStatusBox.getValue().equals("متاهل"));
+                System.out.println(employee.getName());
+                System.out.println(employee.getMonthlySalary());
+                System.out.println(employee.getDailySalary());
+                System.out.println(employee.getInsurancePay());
+                System.out.println(employee.isMarried());
+            }
 
-            System.out.println(employee.getName());
-            System.out.println(employee.getMonthlySalary());
-            System.out.println(employee.getDailySalary());
-            System.out.println(employee.getInsurancePay());
         });
 
         Button btnCancel = new Button("لغو");
         GridPane.setConstraints(btnCancel, 1, 3);
         btnCancel.setOnAction(e -> window.close());
 
-        layout.getChildren().addAll(nameLabel, nameField, salaryField, salaryLabel, btnCancel, btnSubmit, maritalStatusBox, maritalStatusLabel);
+        Button btnShow = new Button("نمایش اطلاعات");
+        GridPane.setConstraints(btnShow, 0, 4);
+        btnShow.setOnAction(e -> showEmployee(employee));
+
+        layout.getChildren().addAll(nameLabel, nameField, salaryField, salaryLabel, btnCancel, btnSubmit, maritalStatusBox, maritalStatusLabel, btnShow);
         layout.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 
         Scene scene = new Scene(layout, width, height);
@@ -69,4 +87,49 @@ public class Modals {
         window.show();
 
     }
+
+    public void showEmployee(Employee employee) {
+        Stage window = new Stage();
+        window.setTitle("اطلاعات کارگران");
+        GridPane layout = new GridPane();
+
+        Label nameLabel = new Label("نام و نام خانوادگی :");
+        Label salaryLabel = new Label("حقوق ماهانه :");
+        Label dailySalaryLabel = new Label("حقوق روزانه :");
+        Label maritalStatusLabel = new Label("وضعیت تاهل :");
+
+        GridPane.setConstraints(nameLabel, 0, 0);
+        GridPane.setConstraints(salaryLabel, 0, 1);
+        GridPane.setConstraints(dailySalaryLabel, 0, 2);
+        GridPane.setConstraints(maritalStatusLabel, 0, 3);
+
+        Label nameValue = new Label();
+        nameValue.setStyle("-fx-font-weight: bold");
+        Label salaryValue = new Label();
+        salaryValue.setStyle("-fx-font-weight: bold");
+        Label dailySalaryValue = new Label();
+        dailySalaryValue.setStyle("-fx-font-weight: bold");
+        Label maritalStatusValue = new Label();
+        maritalStatusValue.setStyle("-fx-font-weight: bold");
+
+        GridPane.setConstraints(nameValue, 1, 0);
+        GridPane.setConstraints(salaryValue, 1, 1);
+        GridPane.setConstraints(dailySalaryValue, 1, 2);
+        GridPane.setConstraints(maritalStatusValue, 1, 3);
+
+        nameValue.setText(employee.getName());
+        salaryValue.setText(String.valueOf(employee.getMonthlySalary()));
+        dailySalaryValue.setText(String.valueOf(employee.getDailySalary()));
+        if (employee.isMarried())
+            maritalStatusValue.setText("متاهل");
+        else
+            maritalStatusValue.setText("مجرد");
+
+        layout.getChildren().addAll(nameLabel, nameValue, salaryLabel, salaryValue, dailySalaryLabel, dailySalaryValue, maritalStatusLabel, maritalStatusValue);
+        layout.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+        Scene scene = new Scene(layout, width, height);
+        window.setScene(scene);
+        window.show();
+    }
+
 }

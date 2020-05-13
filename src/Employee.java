@@ -2,6 +2,7 @@ public class Employee {
     String name;
     double monthlySalary, dailySalary, insurancePay;
     boolean married;
+    int id;
 
     public Employee(String name, double salary) {
         this.name = name;
