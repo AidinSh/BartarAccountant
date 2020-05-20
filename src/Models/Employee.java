@@ -1,3 +1,5 @@
+package Models;
+
 public class Employee {
     String name;
     double monthlySalary, dailySalary, insurancePay;

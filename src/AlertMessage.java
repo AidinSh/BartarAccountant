@@ -70,4 +70,20 @@ public class AlertMessage {
         window.setScene(scene);
         window.showAndWait();
     }
+
+    public void savedMessage(String message){
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("پیام");
+
+        Label errorText = new Label(message);
+
+        StackPane layout = new StackPane();
+        layout.getChildren().add(errorText);
+
+        Scene scene = new Scene(layout, 200, 100);
+
+        window.setScene(scene);
+        window.showAndWait();
+    }
 }

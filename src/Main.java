@@ -3,9 +3,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.sql.SQLException;
 
 public class Main extends Application {
 
@@ -30,7 +31,13 @@ public class Main extends Application {
         btnEmployees.setOnAction(e -> new Modals().getNewEmployee());
 
         Button btnCustomers = new Button("امور مشتریان");
-        //TODO btnCustomers set Action
+        btnCustomers.setOnAction(e -> {
+            try {
+                new ProjectsViewController().onGoingProjects();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
 
         Button btnStorage = new Button("انبار وسایل");
         //TODO set Action

@@ -1,3 +1,5 @@
+package Models;
+
 public class MaterialAndService {
     String name;
     int project_id;
@@ -52,7 +54,7 @@ public class MaterialAndService {
 }
 
 /*
-Project
+Models.Project
 projectName : name
 projectMaterials : {1,2,3,..}
  */
